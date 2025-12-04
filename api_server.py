@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 import os
 import json
 import random
@@ -6,14 +5,13 @@ from typing import List, Optional
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 from pydantic import BaseModel
 from openai import OpenAI
 
 
 load_dotenv()
-OPENAI_KEY = os.getenv("spanish_app_key")
-print("Loaded key:", OPENAI_KEY)
-client = OpenAI(api_key=OPENAI_KEY)
+client = OpenAI(api_key=os.getenv("spanish_app_key"))
 
 app = FastAPI()
 
