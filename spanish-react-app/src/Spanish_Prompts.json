@@ -1,0 +1,456 @@
+[
+  {
+    "id": 1,
+    "text": "¿Cómo te llamas?",
+    "english": "What is your name?",
+    "level": "A1",
+    "topic": "greetings"
+  },
+  {
+    "id": 2,
+    "text": "¿De dónde eres?",
+    "english": "Where are you from?",
+    "level": "A1",
+    "topic": "greetings"
+  },
+
+  {
+    "id": 3,
+    "text": "¿Cuántos años tienes?",
+    "english": "How old are you?",
+    "level": "A1",
+    "topic": "personal_info"
+  },
+  {
+    "id": 4,
+    "text": "Descríbete físicamente.",
+    "english": "Describe yourself physically.",
+    "level": "A1",
+    "topic": "personal_info"
+  },
+  {
+    "id": 5,
+    "text": "¿Cómo es tu personalidad?",
+    "english": "What is your personality like?",
+    "level": "A1",
+    "topic": "personal_info"
+  },
+
+  {
+    "id": 6,
+    "text": "¿Dónde vives ahora?",
+    "english": "Where do you live now?",
+    "level": "A1",
+    "topic": "home"
+  },
+  {
+    "id": 7,
+    "text": "Descríbeme tu casa o apartamento.",
+    "english": "Describe your house or apartment.",
+    "level": "A1",
+    "topic": "home"
+  },
+
+  {
+    "id": 8,
+    "text": "¿Con quién vives?",
+    "english": "Who do you live with?",
+    "level": "A1",
+    "topic": "family"
+  },
+  {
+    "id": 9,
+    "text": "Háblame de tu familia.",
+    "english": "Tell me about your family.",
+    "level": "A1",
+    "topic": "family"
+  },
+  {
+    "id": 10,
+    "text": "¿Tienes hermanos? ¿Cómo son?",
+    "english": "Do you have siblings? What are they like?",
+    "level": "A1",
+    "topic": "family"
+  },
+
+  {
+    "id": 11,
+    "text": "¿Qué te gusta hacer en tu tiempo libre?",
+    "english": "What do you like to do in your free time?",
+    "level": "A1",
+    "topic": "hobbies"
+  },
+  {
+    "id": 12,
+    "text": "¿Practicas algún deporte?",
+    "english": "Do you play any sports?",
+    "level": "A1",
+    "topic": "hobbies"
+  },
+  {
+    "id": 13,
+    "text": "¿Te gusta leer? ¿Qué tipo de libros te gustan?",
+    "english": "Do you like to read? What kinds of books do you like?",
+    "level": "A1",
+    "topic": "hobbies"
+  },
+
+  {
+    "id": 14,
+    "text": "¿A qué hora te levantas normalmente?",
+    "english": "What time do you normally get up?",
+    "level": "A1",
+    "topic": "daily_routine"
+  },
+  {
+    "id": 15,
+    "text": "Descríbeme tu día típico.",
+    "english": "Describe your typical day.",
+    "level": "A1",
+    "topic": "daily_routine"
+  },
+  {
+    "id": 16,
+    "text": "¿Qué haces los fines de semana?",
+    "english": "What do you do on weekends?",
+    "level": "A1",
+    "topic": "daily_routine"
+  },
+
+  {
+    "id": 17,
+    "text": "¿Qué te gusta comer para el desayuno?",
+    "english": "What do you like to eat for breakfast?",
+    "level": "A1",
+    "topic": "food"
+  },
+  {
+    "id": 18,
+    "text": "¿Cuál es tu comida favorita y por qué?",
+    "english": "What is your favorite food and why?",
+    "level": "A1",
+    "topic": "food"
+  },
+  {
+    "id": 19,
+    "text": "¿Te gusta cocinar? ¿Qué sabes preparar?",
+    "english": "Do you like to cook? What can you prepare?",
+    "level": "A1",
+    "topic": "food"
+  },
+
+  {
+    "id": 20,
+    "text": "¿Trabajas o estudias?",
+    "english": "Do you work or study?",
+    "level": "A1",
+    "topic": "school_work"
+  },
+
+  {
+    "id": 21,
+    "text": "¿Qué estudias o en qué trabajas?",
+    "english": "What do you study or what do you work in?",
+    "level": "A2",
+    "topic": "school_work"
+  },
+  {
+    "id": 22,
+    "text": "Descríbeme un día típico en tu trabajo o escuela.",
+    "english": "Describe a typical day at your job or school.",
+    "level": "A2",
+    "topic": "school_work"
+  },
+  {
+    "id": 23,
+    "text": "¿Qué asignatura o parte de tu trabajo te gusta más? ¿Por qué?",
+    "english": "What subject or part of your job do you like most and why?",
+    "level": "A2",
+    "topic": "school_work"
+  },
+
+  {
+    "id": 24,
+    "text": "¿Cómo es tu mejor amigo o amiga?",
+    "english": "What is your best friend like?",
+    "level": "A2",
+    "topic": "people"
+  },
+  {
+    "id": 25,
+    "text": "¿Qué sueles hacer con tus amigos?",
+    "english": "What do you usually do with your friends?",
+    "level": "A2",
+    "topic": "people"
+  },
+  {
+    "id": 26,
+    "text": "Descríbeme a una persona importante en tu vida.",
+    "english": "Describe an important person in your life.",
+    "level": "A2",
+    "topic": "people"
+  },
+
+  {
+    "id": 27,
+    "text": "¿Qué hiciste el fin de semana pasado?",
+    "english": "What did you do last weekend?",
+    "level": "A2",
+    "topic": "past"
+  },
+  {
+    "id": 28,
+    "text": "Cuéntame sobre unas vacaciones que recuerdes bien.",
+    "english": "Tell me about a vacation you remember well.",
+    "level": "A2",
+    "topic": "past"
+  },
+  {
+    "id": 29,
+    "text": "Háblame de un día muy especial para ti.",
+    "english": "Tell me about a very special day for you.",
+    "level": "A2",
+    "topic": "past"
+  },
+
+  {
+    "id": 30,
+    "text": "¿Qué planes tienes para el próximo fin de semana?",
+    "english": "What plans do you have for next weekend?",
+    "level": "A2",
+    "topic": "future"
+  },
+  {
+    "id": 31,
+    "text": "¿Qué te gustaría hacer el próximo verano?",
+    "english": "What would you like to do next summer?",
+    "level": "A2",
+    "topic": "future"
+  },
+  {
+    "id": 32,
+    "text": "¿Qué metas tienes para este año?",
+    "english": "What goals do you have for this year?",
+    "level": "A2",
+    "topic": "future"
+  },
+
+  {
+    "id": 33,
+    "text": "Descríbeme tu ciudad o pueblo.",
+    "english": "Describe your city or town.",
+    "level": "A2",
+    "topic": "city"
+  },
+  {
+    "id": 34,
+    "text": "¿Qué lugares interesantes hay para visitar donde vives?",
+    "english": "What interesting places are there to visit where you live?",
+    "level": "A2",
+    "topic": "city"
+  },
+
+  {
+    "id": 35,
+    "text": "¿Prefieres el campo o la ciudad? Explica tu respuesta.",
+    "english": "Do you prefer the countryside or the city? Explain your answer.",
+    "level": "A2",
+    "topic": "opinions"
+  },
+
+  {
+    "id": 36,
+    "text": "¿Qué tipo de música te gusta escuchar?",
+    "english": "What type of music do you like to listen to?",
+    "level": "A2",
+    "topic": "hobbies"
+  },
+  {
+    "id": 37,
+    "text": "Háblame de una película o serie que te guste.",
+    "english": "Tell me about a movie or series you like.",
+    "level": "A2",
+    "topic": "hobbies"
+  },
+
+  {
+    "id": 38,
+    "text": "¿Qué haces para relajarte cuando estás estresado?",
+    "english": "What do you do to relax when you're stressed?",
+    "level": "A2",
+    "topic": "health_lifestyle"
+  },
+  {
+    "id": 39,
+    "text": "¿Qué hábitos saludables tienes o te gustaría tener?",
+    "english": "What healthy habits do you have or would you like to have?",
+    "level": "A2",
+    "topic": "health_lifestyle"
+  },
+
+  {
+    "id": 40,
+    "text": "¿Qué opinas de aprender idiomas? ¿Por qué es importante para ti?",
+    "english": "What do you think about learning languages? Why is it important to you?",
+    "level": "A2",
+    "topic": "opinions"
+  },
+
+  {
+    "id": 41,
+    "text": "Cuéntame sobre un reto difícil que superaste.",
+    "english": "Tell me about a difficult challenge you overcame.",
+    "level": "B1",
+    "topic": "past"
+  },
+  {
+    "id": 42,
+    "text": "Descríbeme tu trabajo ideal o carrera ideal.",
+    "english": "Describe your ideal job or career.",
+    "level": "B1",
+    "topic": "future"
+  },
+  {
+    "id": 43,
+    "text": "¿Cómo ha cambiado tu vida en los últimos cinco años?",
+    "english": "How has your life changed in the last five years?",
+    "level": "B1",
+    "topic": "past"
+  },
+
+  {
+    "id": 44,
+    "text": "¿Qué harías si tuvieras más tiempo libre cada día?",
+    "english": "What would you do if you had more free time each day?",
+    "level": "B1",
+    "topic": "hypothetical"
+  },
+
+  {
+    "id": 45,
+    "text": "¿Qué consejos le darías a alguien que quiere empezar a estudiar español?",
+    "english": "What advice would you give to someone who wants to start learning Spanish?",
+    "level": "B1",
+    "topic": "opinions"
+  },
+
+  {
+    "id": 46,
+    "text": "Háblame de una experiencia de viaje inolvidable.",
+    "english": "Tell me about an unforgettable travel experience.",
+    "level": "B1",
+    "topic": "travel"
+  },
+
+  {
+    "id": 47,
+    "text": "Si pudieras vivir en cualquier país, ¿en cuál vivirías y por qué?",
+    "english": "If you could live in any country, which one would you choose and why?",
+    "level": "B1",
+    "topic": "hypothetical"
+  },
+
+  {
+    "id": 48,
+    "text": "¿Qué problemas importantes ves en tu comunidad o ciudad?",
+    "english": "What major problems do you see in your community or city?",
+    "level": "B1",
+    "topic": "society"
+  },
+
+  {
+    "id": 49,
+    "text": "¿Qué cambios te gustaría ver en el sistema educativo o laboral?",
+    "english": "What changes would you like to see in the education or work system?",
+    "level": "B1",
+    "topic": "society"
+  },
+
+  {
+    "id": 50,
+    "text": "Descríbeme un día perfecto para ti.",
+    "english": "Describe a perfect day for you.",
+    "level": "B1",
+    "topic": "daily_life"
+  },
+
+  {
+    "id": 51,
+    "text": "¿Qué papel tienen las redes sociales en tu vida?",
+    "english": "What role do social media play in your life?",
+    "level": "B1",
+    "topic": "technology"
+  },
+
+  {
+    "id": 52,
+    "text": "¿Cuáles son las ventajas y desventajas de usar mucho el teléfono móvil?",
+    "english": "What are the advantages and disadvantages of using your phone a lot?",
+    "level": "B1",
+    "topic": "technology"
+  },
+
+  {
+    "id": 53,
+    "text": "Háblame de algún hobby o actividad que te apasione.",
+    "english": "Tell me about a hobby or activity you’re passionate about.",
+    "level": "B1",
+    "topic": "hobbies"
+  },
+
+  {
+    "id": 54,
+    "text": "¿Qué significa para ti tener una vida equilibrada?",
+    "english": "What does having a balanced life mean to you?",
+    "level": "B1",
+    "topic": "health_lifestyle"
+  },
+
+  {
+    "id": 55,
+    "text": "Si pudieras cambiar una decisión del pasado, ¿cuál sería y por qué?",
+    "english": "If you could change a decision from your past, what would it be and why?",
+    "level": "B1",
+    "topic": "hypothetical"
+  },
+
+  {
+    "id": 56,
+    "text": "Descríbeme una persona que admires y explica por qué.",
+    "english": "Describe a person you admire and explain why.",
+    "level": "B1",
+    "topic": "people"
+  },
+
+  {
+    "id": 57,
+    "text": "¿Qué tradiciones o celebraciones son importantes para ti o tu familia?",
+    "english": "What traditions or celebrations are important to you or your family?",
+    "level": "B1",
+    "topic": "culture"
+  },
+
+  {
+    "id": 58,
+    "text": "¿Qué opinas sobre el trabajo remoto o estudiar en línea?",
+    "english": "What do you think about remote work or studying online?",
+    "level": "B1",
+    "topic": "school_work"
+  },
+
+  {
+    "id": 59,
+    "text": "¿Cómo manejas el estrés o la presión en tu vida diaria?",
+    "english": "How do you handle stress or pressure in your daily life?",
+    "level": "B1",
+    "topic": "health_lifestyle"
+  },
+
+  {
+    "id": 60,
+    "text": "¿Qué te gustaría lograr en los próximos cinco años?",
+    "english": "What would you like to achieve in the next five years?",
+    "level": "B1",
+    "topic": "future"
+  }
+]
