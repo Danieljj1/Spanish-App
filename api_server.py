@@ -8,6 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from openai import OpenAI
+from datetime import date as date_type
+import pathlib
 
 
 load_dotenv()
@@ -141,3 +143,62 @@ async def evaluate(req: EvaluateRequest):
         explanation=feedback.get("explanation", ""),
     )
 
+
+PROGRESS_FILE = pathlib.Path("progress.json")
+
+def load_progress():
+    if PROGRESS_FILE.exists():
+        try:
+            return json.loads(PROGRESS_FILE.read_text())
+        except:
+            pass
+    return {"xp": 0, "streak": 0, "last_practice_date": None, "total_sessions": 0, "level": 1}
+
+def save_progress(data: dict):
+    PROGRESS_FILE.write_text(json.dumps(data))
+
+def xp_for_level(level: int) -> int:
+    return level * 100
+
+@app.get("/progress")
+async def get_progress():
+    return load_progress()
+
+class RecordResultRequest(BaseModel):
+    score: int
+
+@app.post("/record-result")
+async def record_result(req: RecordResultRequest):
+    progress = load_progress()
+    today = str(date_type.today())
+    
+    # XP based on score (score 0-10 → 5-50 XP)
+    xp_earned = max(5, req.score * 5)
+    progress["xp"] = progress.get("xp", 0) + xp_earned
+    progress["total_sessions"] = progress.get("total_sessions", 0) + 1
+    
+    # Streak logic
+    last = progress.get("last_practice_date")
+    if last is None:
+        progress["streak"] = 1
+    elif last == today:
+        pass  # already practiced today, no streak change
+    else:
+        from datetime import datetime, timedelta
+        last_dt = datetime.fromisoformat(last).date()
+        today_dt = date_type.today()
+        if (today_dt - last_dt).days == 1:
+            progress["streak"] = progress.get("streak", 0) + 1
+        elif (today_dt - last_dt).days > 1:
+            progress["streak"] = 1
+    
+    progress["last_practice_date"] = today
+    
+    # Level up logic
+    level = progress.get("level", 1)
+    while progress["xp"] >= xp_for_level(level):
+        level += 1
+    progress["level"] = level
+    
+    save_progress(progress)
+    return {"xp_earned": xp_earned, **progress}
