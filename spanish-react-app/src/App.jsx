@@ -1,6 +1,43 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
+// localStorage-based progress (persists per browser, survives free-tier restarts)
+function getStoredProgress() {
+  try {
+    const stored = localStorage.getItem("spanigo_progress");
+    if (stored) return JSON.parse(stored);
+  } catch {}
+  return { xp: 0, streak: 0, level: 1, total_sessions: 0, last_practice_date: null };
+}
+
+function recordStoredResult(score) {
+  const progress = getStoredProgress();
+  const today = new Date().toISOString().split("T")[0];
+  const xpEarned = Math.max(5, score * 5);
+  progress.xp = (progress.xp || 0) + xpEarned;
+  progress.total_sessions = (progress.total_sessions || 0) + 1;
+
+  const last = progress.last_practice_date;
+  if (!last) {
+    progress.streak = 1;
+  } else if (last === today) {
+    // already practiced today
+  } else {
+    const diffDays = Math.round(
+      (new Date(today) - new Date(last)) / (1000 * 60 * 60 * 24)
+    );
+    progress.streak = diffDays === 1 ? (progress.streak || 0) + 1 : 1;
+  }
+  progress.last_practice_date = today;
+
+  let level = progress.level || 1;
+  while (progress.xp >= level * 100) level++;
+  progress.level = level;
+
+  localStorage.setItem("spanigo_progress", JSON.stringify(progress));
+  return { xpEarned, ...progress };
+}
+
 function App() {
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState(null);
@@ -8,21 +45,14 @@ function App() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
-  const [progress, setProgress] = useState({ xp: 0, streak: 0, level: 1, total_sessions: 0 });
+  const [progress, setProgress] = useState(getStoredProgress());
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
   useEffect(() => {
-    pickRandomPrompt();
-    fetchProgress();
+    fetchPrompt();
+    setProgress(getStoredProgress());
   }, []);
-
-  async function fetchProgress() {
-    try {
-      const res = await fetch(`${API_URL}/progress`);
-      if (res.ok) setProgress(await res.json());
-    } catch {}
-  }
 
   async function fetchPrompt() {
     try {
@@ -36,9 +66,7 @@ function App() {
           topic: data.topic,
         });
       }
-    } catch {
-      // fallback: keep current prompt
-    }
+    } catch {}
   }
 
   function pickRandomPrompt() {
@@ -71,15 +99,8 @@ function App() {
       setFeedback(data);
       setShowTranslation(true);
 
-      // Record result for XP/streak
-      try {
-        await fetch(`${API_URL}/record-result`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ score: data.score }),
-        });
-        await fetchProgress();
-      } catch {}
+      const updated = recordStoredResult(data.score);
+      setProgress(updated);
     } catch (err) {
       setError("There was a problem contacting the server.");
     } finally {
@@ -111,7 +132,6 @@ function App() {
           <span>Spani-GO</span>
         </div>
 
-        {/* Progress Bar */}
         <div className="progress-bar-section">
           <div className="progress-stats">
             <span className="streak-badge">🔥 {progress.streak} day streak</span>
