@@ -1,6 +1,42 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import prompts from "./Spanish_Prompts.json";
+
+// localStorage-based progress (persists per browser, survives free-tier restarts)
+function getStoredProgress() {
+  try {
+    const stored = localStorage.getItem("spanigo_progress");
+    if (stored) return JSON.parse(stored);
+  } catch {}
+  return { xp: 0, streak: 0, level: 1, total_sessions: 0, last_practice_date: null };
+}
+
+function recordStoredResult(score) {
+  const progress = getStoredProgress();
+  const today = new Date().toISOString().split("T")[0];
+  const xpEarned = Math.max(5, score * 5);
+  progress.xp = (progress.xp || 0) + xpEarned;
+  progress.total_sessions = (progress.total_sessions || 0) + 1;
+
+  const last = progress.last_practice_date;
+  if (!last) {
+    progress.streak = 1;
+  } else if (last === today) {
+    // already practiced today
+  } else {
+    const diffDays = Math.round(
+      (new Date(today) - new Date(last)) / (1000 * 60 * 60 * 24)
+    );
+    progress.streak = diffDays === 1 ? (progress.streak || 0) + 1 : 1;
+  }
+  progress.last_practice_date = today;
+
+  let level = progress.level || 1;
+  while (progress.xp >= level * 100) level++;
+  progress.level = level;
+
+  localStorage.setItem("spanigo_progress", JSON.stringify(progress));
+  return { xpEarned, ...progress };
+}
 
 function App() {
   const [answer, setAnswer] = useState("");
@@ -9,60 +45,72 @@ function App() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
+  const [progress, setProgress] = useState(getStoredProgress());
 
-  // Pick a random prompt on first load
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
   useEffect(() => {
-    pickRandomPrompt();
+    fetchPrompt();
+    setProgress(getStoredProgress());
   }, []);
+
+  async function fetchPrompt() {
+    try {
+      const res = await fetch(`${API_URL}/prompt`);
+      if (res.ok) {
+        const data = await res.json();
+        setPrompt({
+          text: data.prompt_es,
+          english: data.prompt_en,
+          level: data.level,
+          topic: data.topic,
+        });
+      }
+    } catch {}
+  }
 
   function pickRandomPrompt() {
     setError("");
     setFeedback(null);
     setAnswer("");
     setShowTranslation(false);
-
-    const random = prompts[Math.floor(Math.random() * prompts.length)];
-    setPrompt(random);
+    fetchPrompt();
   }
 
   async function evaluateAnswer() {
-    // If no prompt or answer, return without evaluating
     if (!prompt || !answer.trim()) return;
-
     setLoading(true);
     setError("");
     setFeedback(null);
 
-    // Extract Spanish and English prompts
-    const promptEs = prompt.text;
-    const promptEn = prompt.english;
-
-    // Send POST request to server for evaluation
     try {
-      const API_URL = import.meta.env.VITE_API_URL;
-
       const res = await fetch(`${API_URL}/evaluate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt_es: promptEs,
-          prompt_en: promptEn,
+          prompt_es: prompt.text,
+          prompt_en: prompt.english,
           answer: answer,
         }),
       });
 
       if (!res.ok) throw new Error(`Server error: ${res.status}`);
-
       const data = await res.json();
       setFeedback(data);
-      setShowTranslation(true); // show EN after user submits
+      setShowTranslation(true);
+
+      const updated = recordStoredResult(data.score);
+      setProgress(updated);
     } catch (err) {
-      console.error(err);
       setError("There was a problem contacting the server.");
     } finally {
       setLoading(false);
     }
   }
+
+  const levelXpTarget = progress.level * 100;
+  const levelXpCurrent = progress.xp % levelXpTarget;
+  const levelXpPct = Math.min((levelXpCurrent / levelXpTarget) * 100, 100);
 
   if (!prompt) {
     return (
@@ -77,13 +125,24 @@ function App() {
     );
   }
 
-  const promptEs = prompt.text;
-  const promptEn = prompt.english;
-
   return (
     <div className="app-root">
       <div className="card">
-        <div className="card-header">Spani-GO</div>
+        <div className="card-header">
+          <span>Spani-GO</span>
+        </div>
+
+        <div className="progress-bar-section">
+          <div className="progress-stats">
+            <span className="streak-badge">🔥 {progress.streak} day streak</span>
+            <span className="level-badge">Level {progress.level}</span>
+            <span className="xp-text">{progress.xp} XP total</span>
+          </div>
+          <div className="xp-bar-container">
+            <div className="xp-bar" style={{ width: `${levelXpPct}%` }} />
+          </div>
+          <div className="xp-label">{levelXpCurrent} / {levelXpTarget} XP to Level {progress.level + 1}</div>
+        </div>
 
         <div className="card-body">
           <div className="prompt-meta">
@@ -93,13 +152,13 @@ function App() {
 
           <div className="bubble bubble-es">
             <span className="bubble-label">Tutor</span>
-            <p>{promptEs}</p>
+            <p>{prompt.text}</p>
           </div>
 
           {showTranslation && (
             <div className="bubble bubble-en">
               <span className="bubble-label">EN</span>
-              <p>{promptEn}</p>
+              <p>{prompt.english}</p>
             </div>
           )}
 
@@ -141,9 +200,13 @@ function App() {
                     : feedback.score >= 7
                     ? "💪 Good job, but there's room for improvement."
                     : feedback.score >= 5
-                    ? "🙂 Good job, but there's room for improvement."
+                    ? "🙂 Fair effort — keep going!"
                     : "🌱 Needs significant improvement. Keep practicing!"}
                 </span>
+              </div>
+
+              <div className="xp-earned-banner">
+                +{Math.max(5, feedback.score * 5)} XP earned!
               </div>
 
               <div className="feedback-section">
@@ -162,10 +225,7 @@ function App() {
                       <li key={i}>
                         {alt}
                         {feedback.alternatives_english?.[i] && (
-                          <span className="alt-en">
-                            {" "}
-                            — {feedback.alternatives_english[i]}
-                          </span>
+                          <span className="alt-en"> — {feedback.alternatives_english[i]}</span>
                         )}
                       </li>
                     ))}
