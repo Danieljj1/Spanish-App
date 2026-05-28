@@ -104,12 +104,15 @@ def prompt_evaluation(spanish_prompt: str, user_answer: str):
         ),
     }
 
-    resp = client.responses.create(
-        model="gpt-4.1-mini",
-        input=[system_message, user_message],
+    resp = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[system_message, user_message],
+        temperature=0.3,
     )
 
-    raw = resp.output[0].content[0].text
+    raw = resp.choices[0].message.content
+
+    raw = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
     try:
         data = json.loads(raw)
