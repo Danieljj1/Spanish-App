@@ -13,7 +13,7 @@ import pathlib
 
 
 load_dotenv()
-client = OpenAI(api_key=os.getenv("spanish_app_key"))
+client = OpenAI(api_key=(os.getenv("spanish_app_key") or "").strip())
 
 app = FastAPI()
 
@@ -86,10 +86,10 @@ def prompt_evaluation(spanish_prompt: str, user_answer: str):
             "Return ONLY JSON with this exact structure:\n"
             "{\n"
             '  \"score\": <number 0-10>,\n'
-            '  \"correction\": \"<correct Spanish answer>\",\n'
-            '  \"alternatives\": [\"<alt1>\", \"<alt2>\"],\n'
-            '  \"alternatives_english\": [\"<alt1 in English>\", \"<alt2 in English>\"],\n'
-            '  \"explanation\": \"<short English explanation of mistakes>\"\n'
+            '  \"correction\": \"<correct Spanish answer>\",' 
+            '\n  \"alternatives\": [\"<alt1>\", \"<alt2>\"],\n'
+            '  \"alternatives_english\": [\"<alt1 in English>\", \"<alt2 in English>\",' 
+            '\n  \"explanation\": \"<short English explanation of mistakes>\"\n'
             "}\n"
             "No extra text outside the JSON."
         ),
@@ -175,17 +175,15 @@ async def record_result(req: RecordResultRequest):
     progress = load_progress()
     today = str(date_type.today())
     
-    # XP based on score (score 0-10 → 5-50 XP)
     xp_earned = max(5, req.score * 5)
     progress["xp"] = progress.get("xp", 0) + xp_earned
     progress["total_sessions"] = progress.get("total_sessions", 0) + 1
     
-    # Streak logic
     last = progress.get("last_practice_date")
     if last is None:
         progress["streak"] = 1
     elif last == today:
-        pass  # already practiced today, no streak change
+        pass
     else:
         from datetime import datetime, timedelta
         last_dt = datetime.fromisoformat(last).date()
@@ -197,7 +195,6 @@ async def record_result(req: RecordResultRequest):
     
     progress["last_practice_date"] = today
     
-    # Level up logic
     level = progress.get("level", 1)
     while progress["xp"] >= xp_for_level(level):
         level += 1
