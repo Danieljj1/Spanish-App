@@ -38,6 +38,20 @@ function recordStoredResult(score) {
   return { xpEarned, ...progress };
 }
 
+function scoreColor(score) {
+  if (score >= 9) return "var(--green)";
+  if (score >= 7) return "var(--accent)";
+  if (score >= 5) return "var(--orange)";
+  return "var(--red)";
+}
+
+function scoreLabel(score) {
+  if (score >= 9) return "Excellent";
+  if (score >= 7) return "Good work";
+  if (score >= 5) return "Fair effort";
+  return "Keep practicing";
+}
+
 function App() {
   const [answer, setAnswer] = useState("");
   const [feedback, setFeedback] = useState(null);
@@ -112,14 +126,16 @@ function App() {
   const levelXpCurrent = progress.xp % levelXpTarget;
   const levelXpPct = Math.min((levelXpCurrent / levelXpTarget) * 100, 100);
 
+  // Loading state
   if (!prompt) {
     return (
       <div className="app-root">
-        <div className="card">
-          <div className="card-header">Spani-GO</div>
-          <div className="card-body">
-            <p>Loading prompt...</p>
+        <div className="loading-layout">
+          <div className="loading-side">
+            <span className="loading-wordmark">Spani-GO</span>
+            <span className="loading-tagline">Daily Spanish Practice</span>
           </div>
+          <div className="loading-main">Loading...</div>
         </div>
       </div>
     );
@@ -127,44 +143,60 @@ function App() {
 
   return (
     <div className="app-root">
-      <div className="card">
-        <div className="card-header">
-          <span>Spani-GO</span>
-        </div>
+      <div className="layout">
 
-        <div className="progress-bar-section">
-          <div className="progress-stats">
-            <span className="streak-badge">🔥 {progress.streak} day streak</span>
-            <span className="level-badge">Level {progress.level}</span>
-            <span className="xp-text">{progress.xp} XP total</span>
+        {/* Left panel: brand + progress stats */}
+        <aside className="side-panel">
+          <div className="brand">
+            <span className="brand-wordmark">Spani-GO</span>
+            <span className="brand-tagline">Daily practice</span>
           </div>
-          <div className="xp-bar-container">
-            <div className="xp-bar" style={{ width: `${levelXpPct}%` }} />
-          </div>
-          <div className="xp-label">{levelXpCurrent} / {levelXpTarget} XP to Level {progress.level + 1}</div>
-        </div>
 
-        <div className="card-body">
+          <div className="stats-grid">
+            <div className="stat-item">
+              <span className="stat-val streak">{progress.streak}</span>
+              <span className="stat-lbl">Day streak</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-val">Lv {progress.level}</span>
+              <span className="stat-lbl">Level</span>
+            </div>
+          </div>
+
+          <div className="xp-block">
+            <div className="xp-meta">
+              <span>XP</span>
+              <span>{levelXpCurrent} / {levelXpTarget}</span>
+            </div>
+            <div className="xp-track">
+              <div className="xp-fill" style={{ width: `${levelXpPct}%` }} />
+            </div>
+            <span className="xp-total">{progress.xp} total XP</span>
+          </div>
+        </aside>
+
+        {/* Right panel: practice */}
+        <main className="practice-panel">
           <div className="prompt-meta">
             <span className="pill pill-level">{prompt.level}</span>
             <span className="pill pill-topic">{prompt.topic}</span>
           </div>
 
-          <div className="bubble bubble-es">
-            <span className="bubble-label">Tutor</span>
+          <div className="prompt-card">
+            <span className="card-label">Tutor</span>
             <p>{prompt.text}</p>
           </div>
 
           {showTranslation && (
-            <div className="bubble bubble-en">
-              <span className="bubble-label">EN</span>
+            <div className="translation-card">
+              <span className="card-label">English</span>
               <p>{prompt.english}</p>
             </div>
           )}
 
           <textarea
             className="answer-input"
-            placeholder="Escribe tu respuesta..."
+            placeholder="Escribe tu respuesta en espanol..."
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
           />
@@ -178,7 +210,7 @@ function App() {
               onClick={pickRandomPrompt}
               disabled={loading}
             >
-              🔄 New prompt
+              New prompt
             </button>
             <button
               type="button"
@@ -186,46 +218,46 @@ function App() {
               onClick={evaluateAnswer}
               disabled={loading || !answer.trim()}
             >
-              {loading ? "Evaluando..." : "Enviar respuesta"}
+              {loading ? "Evaluating..." : "Submit"}
             </button>
           </div>
 
           {feedback && (
             <div className="feedback">
-              <div className="score-row">
-                <span className="score-badge">{feedback.score}/10</span>
-                <span className="score-text">
-                  {feedback.score >= 9
-                    ? "🔥 Excellent, perfect response!"
-                    : feedback.score >= 7
-                    ? "💪 Good job, but there's room for improvement."
-                    : feedback.score >= 5
-                    ? "🙂 Fair effort — keep going!"
-                    : "🌱 Needs significant improvement. Keep practicing!"}
+              <div className="score-display">
+                <span
+                  className="score-number"
+                  style={{ color: scoreColor(feedback.score) }}
+                >
+                  {feedback.score}
                 </span>
+                <span className="score-denom">/10</span>
+                <span className="score-desc">{scoreLabel(feedback.score)}</span>
               </div>
 
-              <div className="xp-earned-banner">
-                +{Math.max(5, feedback.score * 5)} XP earned!
+              <div className="xp-earned">
+                +{Math.max(5, feedback.score * 5)} XP
               </div>
 
-              <div className="feedback-section">
-                <h4>Corrección</h4>
-                <p className="feedback-es">{feedback.correction}</p>
+              <div className="feedback-block">
+                <span className="fb-label">Correction</span>
+                <p className="fb-es">{feedback.correction}</p>
                 {feedback.correction_english && (
-                  <p className="feedback-en">{feedback.correction_english}</p>
+                  <p className="fb-en">{feedback.correction_english}</p>
                 )}
               </div>
 
               {feedback.alternatives?.length > 0 && (
-                <div className="feedback-section">
-                  <h4>Otras formas de decirlo</h4>
-                  <ul>
+                <div className="feedback-block">
+                  <span className="fb-label">Other ways to say it</span>
+                  <ul className="alt-list">
                     {feedback.alternatives.map((alt, i) => (
                       <li key={i}>
-                        {alt}
+                        <span>{alt}</span>
                         {feedback.alternatives_english?.[i] && (
-                          <span className="alt-en"> — {feedback.alternatives_english[i]}</span>
+                          <span className="alt-en">
+                            {feedback.alternatives_english[i]}
+                          </span>
                         )}
                       </li>
                     ))}
@@ -233,13 +265,13 @@ function App() {
                 </div>
               )}
 
-              <div className="feedback-section">
-                <h4>Explicación</h4>
+              <div className="feedback-block">
+                <span className="fb-label">Explanation</span>
                 <p>{feedback.explanation}</p>
               </div>
             </div>
           )}
-        </div>
+        </main>
       </div>
     </div>
   );
